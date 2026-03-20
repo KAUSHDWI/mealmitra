@@ -70,7 +70,7 @@ Status badges (Available / Accepted / Delivered / Expired)
 
 Animated impact counters
 
-Interactive dashboards
+Interactive dashboard
 
 Chart-based analytics (Chart.js)
 
