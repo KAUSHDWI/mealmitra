@@ -9,7 +9,7 @@ The platform enables restaurants, event organizers, hostels, and individuals to 
 
 Reduce food waste
 
-Support underprivileged communities
+Support underprivileged communitiess
 
 Improve coordination between donors and NGOs
 
