@@ -1,5 +1,5 @@
 /* ===================================================
-   login.js — Auth Page Logic
+   login.js — Auth Page Logic (Connected to Backend)
    =================================================== */
 
 let currentRole = 'donor';
@@ -90,12 +90,12 @@ function isValidPhone(ph) {
     return /^[+\d\s\-()]{8,15}$/.test(ph);
 }
 
-/* ---- LOGIN HANDLER ---- */
-function handleLogin(e) {
+/* ---- LOGIN HANDLER (Real Backend) ---- */
+async function handleLogin(e) {
     e.preventDefault();
     clearErrors();
     let valid = true;
-    const email = document.getElementById('loginEmail').value;
+    const email = document.getElementById('loginEmail').value.trim();
     const pw = document.getElementById('loginPassword').value;
 
     if (!isValidEmail(email)) {
@@ -110,35 +110,51 @@ function handleLogin(e) {
 
     if (!valid) return;
 
-    /* Simulate loading */
     const btn = document.getElementById('loginSubmitBtn');
     const spinner = document.getElementById('loginSpinner');
     btn.disabled = true;
     if (spinner) spinner.classList.remove('hidden');
 
-    setTimeout(() => {
+    try {
+        const result = await authAPI.login(email, pw, currentRole);
+
         btn.disabled = false;
         if (spinner) spinner.classList.add('hidden');
 
-        const destinations = {
-            donor: 'donor-dashboard.html',
-            ngo: 'ngo-dashboard.html',
-            admin: 'admin-dashboard.html'
-        };
-        showToast(`Welcome back! Redirecting to ${currentRole} dashboard…`, 'success');
-        setTimeout(() => {
-            window.location.href = destinations[currentRole] || 'index.html';
-        }, 1200);
-    }, 1600);
+        if (result.success) {
+            const destinations = {
+                donor: 'donor-dashboard.html',
+                ngo: 'ngo-dashboard.html',
+                admin: 'admin-dashboard.html'
+            };
+            showToast(`Welcome back, ${result.user.firstName}! Redirecting…`, 'success');
+            setTimeout(() => {
+                window.location.href = destinations[result.user.role] || 'index.html';
+            }, 1200);
+        } else {
+            showToast(result.message || 'Login failed. Check your credentials.', 'error');
+            if (result.errors) {
+                result.errors.forEach(err => {
+                    if (err.path === 'email') showError('loginEmailErr', err.msg);
+                    if (err.path === 'password') showError('loginPasswordErr', err.msg);
+                });
+            }
+        }
+    } catch (err) {
+        btn.disabled = false;
+        if (spinner) spinner.classList.add('hidden');
+        showToast('Network error. Is the server running?', 'error');
+    }
 }
 
-/* ---- REGISTER HANDLER ---- */
-function handleRegister(e) {
+/* ---- REGISTER HANDLER (Real Backend) ---- */
+async function handleRegister(e) {
     e.preventDefault();
     clearErrors();
     let valid = true;
 
     const firstName = document.getElementById('regFirstName').value.trim();
+    const lastName = document.getElementById('regLastName').value.trim();
     const org = document.getElementById('regOrg').value.trim();
     const email = document.getElementById('regEmail').value.trim();
     const phone = document.getElementById('regPhone').value.trim();
@@ -189,15 +205,38 @@ function handleRegister(e) {
     btn.disabled = true;
     if (spinner) spinner.classList.remove('hidden');
 
-    setTimeout(() => {
+    try {
+        const result = await authAPI.register({
+            firstName, lastName, email, password: pw,
+            role: currentRole, organization: org,
+            phone, city
+        });
+
         btn.disabled = false;
         if (spinner) spinner.classList.add('hidden');
-        showToast('Account created successfully! Please sign in.', 'success');
-        setTimeout(() => switchTab('login'), 1400);
-    }, 1800);
+
+        if (result.success) {
+            showToast('Account created successfully! Please sign in.', 'success');
+            // Remove token — user should explicitly login
+            removeToken(); removeUser();
+            setTimeout(() => switchTab('login'), 1400);
+        } else {
+            showToast(result.message || 'Registration failed.', 'error');
+        }
+    } catch (err) {
+        btn.disabled = false;
+        if (spinner) spinner.classList.add('hidden');
+        showToast('Network error. Is the server running?', 'error');
+    }
 }
 
 /* ---- AUTO SWITCH TO REGISTER IF HASH ---- */
 document.addEventListener('DOMContentLoaded', () => {
     if (window.location.hash === '#register') switchTab('register');
+    // If already logged in, redirect to dashboard
+    if (isLoggedIn()) {
+        const user = getUser();
+        const dest = { donor: 'donor-dashboard.html', ngo: 'ngo-dashboard.html', admin: 'admin-dashboard.html' };
+        window.location.href = dest[user?.role] || 'index.html';
+    }
 });

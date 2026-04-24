@@ -123,9 +123,23 @@ function filterCards(query, cards, fields) {
     });
 }
 
+/* ======= SIGN OUT ======= */
+function handleSignOut(e) {
+    if (e) e.preventDefault();
+    if (typeof removeToken === 'function') removeToken();
+    if (typeof removeUser === 'function') removeUser();
+    window.location.href = 'login.html';
+}
+
 /* ======= INIT ON DOM READY ======= */
 document.addEventListener('DOMContentLoaded', () => {
     initCounters();
     initSidebar();
     setActiveLink();
+
+    // Wire sign-out links
+    document.querySelectorAll('.sidebar-footer a[href="index.html"]').forEach(link => {
+        link.href = '#';
+        link.addEventListener('click', handleSignOut);
+    });
 });
