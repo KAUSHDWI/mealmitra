@@ -9,16 +9,16 @@ The platform enables restaurants, event organizers, hostels, and individuals to 
 
 Reduce food waste
 
-Support underprivileged communities
+Support underprivileged communitiess
 
 Improve coordination between donors and NGOs
 
-Promote responsible consumption
+Promote responsible consumption ok
 
 Digitally track food redistribution impact
 
 🌍 Sustainable Development Goals (SDGs)
-
+jh
 This project aligns with:
 
 Goal 1 – No Poverty
@@ -70,7 +70,7 @@ Status badges (Available / Accepted / Delivered / Expired)
 
 Animated impact counters
 
-Interactive dashboards
+Interactive dashboard
 
 Chart-based analytics (Chart.js)
 
