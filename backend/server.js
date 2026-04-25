@@ -15,11 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 // ===== FRONTEND STATIC FILES =====
-// Production: built into backend/public/
-// Development: served from ../frontend/
-const frontendPath = process.env.NODE_ENV === 'production'
-    ? path.join(__dirname, 'public')
-    : path.join(__dirname, '..', 'frontend');
+const frontendPath = path.join(__dirname, 'frontend'); // ✅ Fixed
 
 // Serve CSS and JS from their subdirectories
 app.use('/css', express.static(path.join(frontendPath, 'css')));
