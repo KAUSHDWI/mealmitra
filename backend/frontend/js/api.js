@@ -7,11 +7,7 @@
 // ======= API CONFIGURATION =======
 // In production (Vercel), calls go to the Render backend.
 // In development (localhost), calls go to the local server.
-const RENDER_BACKEND_URL = 'https://mealmitra-v2rl.onrender.com';
-
-const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? '/api'                           // Local dev — same-origin
-    : `${RENDER_BACKEND_URL}/api`;     // Production — Render backend
+const API_BASE = '/api';
 
 // ======= TOKEN MANAGEMENT =======
 function getToken() { return localStorage.getItem('mealmitra_token'); }
