@@ -15,7 +15,7 @@ Improve coordination between donors and NGOs
 
 Promote responsible consumption ok
 
-Digitally track food redistribution impact
+Digitally track food redistribution impacta
 
 🌍 Sustainable Development Goals (SDGs)
 jh
