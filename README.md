@@ -13,7 +13,7 @@ Support underprivileged communitiess
 
 Improve coordination between donors and NGOs
 
-Promote responsible consumption ok
+Promote responsible consumption 
 
 Digitally track food redistribution impacta
 
